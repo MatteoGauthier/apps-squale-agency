@@ -1,13 +1,13 @@
-import prisma from "./prisma";
-import { produce } from "immer";
-import app from "next/app";
+import prisma from "./prisma"
+import { produce } from "immer"
+import app from "next/app"
 export async function getApps() {
 	const apps = await prisma.app.findMany({
 		include: {
 			host: true,
 			repository: true,
 		},
-	});
+	})
 
 	const l = await Promise.all(
 		apps.map(async (app) => {
@@ -18,22 +18,20 @@ export async function getApps() {
 						"Content-Type": "application/json",
 						Authorization: `Bearer ${process.env.VERCEL_TOKEN}`,
 					},
-				});
+				})
 
 				if (result.status !== 200) {
-					throw new Error("VercelFetchError");
+					throw new Error("VercelFetchError")
 				}
 
-				const json = await result.json();
-				const vcProjectId = json.targets.production.id;
+				const json = await result.json()
+				const vcProjectId = json.targets.production.id
 				// @ts-ignore: Unreachable code error
-				draft.vcProjectId = vcProjectId;
-				return draft;
-			});
+				draft.vcProjectId = vcProjectId
+				return draft
+			})
 		})
-	);
+	)
 
-	console.log(l);
-
-	return apps;
+	return l
 }

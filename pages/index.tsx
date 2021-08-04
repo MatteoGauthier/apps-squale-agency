@@ -3,12 +3,14 @@ import Head from "next/head"
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
 import data from "../data"
-import React, {useState} from "react"
+import React, { useState } from "react"
 import { IoLogoGithub, IoRefresh, IoLogoVercel } from "react-icons/io5"
+import { SiVisualstudiocode } from "react-icons/si"
+import { VscRepoClone } from "react-icons/vsc"
 import bgImgSrc from "../public/bailey-zindel-II5GT90rplw-unsplash.jpg"
 import { getApps } from "../lib/apps"
 import { App, Prisma } from "@prisma/client"
-import { toast } from "react-hot-toast";
+import { toast } from "react-hot-toast"
 
 type AppWithHostAndRepository = Prisma.AppGetPayload<{
 	include: { host: true; repository: true }
@@ -19,18 +21,18 @@ type Props = {
 }
 
 const Home: React.FC<Props> = (props) => {
-	console.log(props.apps)
-	const [isLoading, setIsLoading] = useState(false);
+	console.log("props",props.apps)
+	const [isLoading, setIsLoading] = useState(false)
 	const sendDeployHook = async (url: string) => {
-		setIsLoading(true);
-		const webhookPromise = fetch(url);
+		setIsLoading(true)
+		const webhookPromise = fetch(url)
 		await toast.promise(webhookPromise, {
 			loading: "Sending deployment hook intent...",
 			success: <b>New deployement started</b>,
 			error: <b>An error occured</b>,
-		});
-		setIsLoading(false);
-	};
+		})
+		setIsLoading(false)
+	}
 
 	return (
 		<div className="">
@@ -85,6 +87,18 @@ const Home: React.FC<Props> = (props) => {
 												className="flex items-center self-end p-1 space-x-1 border rounded bg-blue-gray-100"
 											>
 												<IoLogoVercel className="w-5 h-5 text-cool-gray-900 " />
+											</a>
+											<a
+												href={`https://open.vscode.dev/${app.repositorySlug}`}
+												className="flex items-center self-end p-1 space-x-1 border rounded bg-blue-gray-100"
+											>
+												<SiVisualstudiocode className="w-5 h-5 text-cool-gray-900 " />
+											</a>
+											<a
+												href={`https://open.vscode.dev/${app.repositorySlug}`}
+												className="flex items-center self-end p-1 space-x-1 border rounded bg-blue-gray-100"
+											>
+												<VscRepoClone className="w-5 h-5 text-cool-gray-900 " />
 											</a>
 										</div>
 										<div className="flex items-center self-end p-1 space-x-1 border rounded bg-blue-gray-100">
