@@ -20,6 +20,10 @@ export async function getApps() {
 					},
 				});
 
+				if (result.status !== 200) {
+					throw new Error("VercelFetchError");
+				}
+
 				const json = await result.json();
 				const vcProjectId = json.targets.production.id;
 				// @ts-ignore: Unreachable code error
