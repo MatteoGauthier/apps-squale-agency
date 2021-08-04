@@ -11,6 +11,8 @@ import bgImgSrc from "../public/bailey-zindel-II5GT90rplw-unsplash.jpg"
 import { getApps } from "../lib/apps"
 import { App, Prisma } from "@prisma/client"
 import { toast } from "react-hot-toast"
+import copy from "copy-text-to-clipboard"
+import Tippy from "@tippyjs/react"
 
 type AppWithHostAndRepository = Prisma.AppGetPayload<{
 	include: { host: true; repository: true }
@@ -21,19 +23,27 @@ type Props = {
 }
 
 const Home: React.FC<Props> = (props) => {
-	console.log("props",props.apps)
+	console.log("props", props.apps)
 	const [isLoading, setIsLoading] = useState(false)
+
 	const sendDeployHook = async (url: string) => {
-		setIsLoading(true)
-		const webhookPromise = fetch(url)
-		await toast.promise(webhookPromise, {
-			loading: "Sending deployment hook intent...",
-			success: <b>New deployement started</b>,
-			error: <b>An error occured</b>,
-		})
-		setIsLoading(false)
+		if (!isLoading) {
+			setIsLoading(true)
+			const webhookPromise = fetch(url)
+			await toast.promise(webhookPromise, {
+				loading: "Sending deployment hook intent...",
+				success: <b>New deployement started</b>,
+				error: <b>An error occured</b>,
+			})
+			setIsLoading(false)
+		}
+		return
 	}
 
+	const copyToClipboard = async (author: string, repo: string) => {
+		copy(`git clone https://github.com/${author}/${repo} ; cd ${repo} ; yarn`)
+		toast.success(<b>Copied to clipboard</b>)
+	}
 	return (
 		<div className="">
 			<div className="z-0 h-full ">
@@ -94,17 +104,28 @@ const Home: React.FC<Props> = (props) => {
 											>
 												<SiVisualstudiocode className="w-5 h-5 text-cool-gray-900 " />
 											</a>
-											<a
-												href={`https://open.vscode.dev/${app.repositorySlug}`}
-												className="flex items-center self-end p-1 space-x-1 border rounded bg-blue-gray-100"
+											<Tippy
+												theme="light"
+												arrow={false}
+												offset={[0, 16]}
+												placement="bottom"
+												content="Copy to your clipboard the command used to clone and install project"
 											>
-												<VscRepoClone className="w-5 h-5 text-cool-gray-900 " />
-											</a>
+												<button
+													onClick={() => copyToClipboard(app.repository.owner, app.repository.repo)}
+													className="flex items-center self-end p-1 space-x-1 border rounded bg-blue-gray-100"
+												>
+													<VscRepoClone className="w-5 h-5 text-cool-gray-900 " />
+												</button>
+											</Tippy>
 										</div>
-										<div className="flex items-center self-end p-1 space-x-1 border rounded bg-blue-gray-100">
+										<button
+											onClick={() => sendDeployHook(app.deployHookUrl)}
+											className="flex items-center cursor-pointer self-end p-1 space-x-1 border rounded bg-blue-gray-100"
+										>
 											<span className="leading-none">Redeploy</span>
 											<IoRefresh className="w-5 h-5 text-cool-gray-900" />
-										</div>
+										</button>
 									</div>
 								</div>
 							</div>
