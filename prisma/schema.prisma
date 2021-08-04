@@ -8,17 +8,16 @@ datasource db {
 }
 
 model App {
-  id            String        @id @default(cuid())
-  name          String
-  description   String
-  domain        String
-  screenshot    String
-  deployHookUrl String
-  host          HostedProject @relation(fields: [hostedProjectId], references: [id])
-
-  hostedProjectId String
-  repository      GitRepository @relation(fields: [repositorySlug], references: [slug])
-  repositorySlug  String
+  id             String        @id @default(cuid())
+  name           String
+  description    String
+  domain         String
+  screenshot     String
+  deployHookUrl  String
+  host           HostedProject @relation(fields: [hostProjectId], references: [projectId])
+  hostProjectId  String
+  repository     GitRepository @relation(fields: [repositorySlug], references: [slug])
+  repositorySlug String
 }
 
 model HostedProject {
