@@ -3,9 +3,10 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import data from "../data";
-import React from "react";
+import React, { useState } from "react";
 import { IoLogoGithub, IoRefresh, IoLogoVercel } from "react-icons/io5";
 import bgImgSrc from "../public/bailey-zindel-II5GT90rplw-unsplash.jpg";
+import { toast } from "react-hot-toast";
 interface SSGProps {
 	title: string;
 	apps: {
@@ -26,19 +27,40 @@ interface SSGProps {
 }
 
 const Home = ({ data: { apps } }: { data: SSGProps }) => {
+	const [isLoading, setIsLoading] = useState(false);
+	const sendDeployHook = async (url: string) => {
+		setIsLoading(true);
+		const webhookPromise = fetch(url);
+		await toast.promise(webhookPromise, {
+			loading: "Sending deployment hook intent...",
+			success: <b>New deployement started</b>,
+			error: <b>An error occured</b>,
+		});
+		setIsLoading(false);
+	};
+
 	return (
 		<div className="">
-			<Image src={bgImgSrc} alt="bg-image" layout="fill"  className="z-0" />
+			<div className="z-0 h-full ">
+				<Image
+					src={bgImgSrc}
+					alt="bg-image"
+					layout="fill"
+					objectFit="cover"
+					objectPosition="center"
+					className="z-0 h-full"
+				/>
+			</div>
 			<div className="max-w-screen-2xl mx-auto px-4 absolute inset-0 z-10">
 				<h1 className="text-4xl flex items-center space-x-3 font-bold text-cool-gray-800 tracking-tight mt-8 mb-5">
 					<span className="leading-none">apps.squale.agency</span>
 					<div className="h-4 w-4 rounded-full mt-1 bg-[#0065bb]"></div>
 				</h1>
-				<div className="grid grid-cols-5 gap-x-2">
+				<div className="grid 2xl:grid-cols-5 grid-cols-3 gap-y-3 gap-x-2">
 					{[...apps, ...apps].map((app, x) => {
 						return (
 							<div
-								className="flex flex-col shadow-lg border bg-white/20 backdrop-blur-md backdrop-filter border-gray-200/60 rounded-lg overflow-hidden"
+								className="flex flex-col shadow-lg border bg-white/40 backdrop-blur-md backdrop-filter border-gray-200/60 rounded-lg overflow-hidden"
 								key={x}
 							>
 								<div>
@@ -72,7 +94,10 @@ const Home = ({ data: { apps } }: { data: SSGProps }) => {
 												<IoLogoVercel className="h-5 w-5 text-cool-gray-900 " />
 											</a>
 										</div>
-										<div className="p-1 self-end flex items-center bg-blue-gray-100 space-x-1 rounded border">
+										<div
+											onClick={() => !isLoading && sendDeployHook(app.deployHook)}
+											className="p-1 cursor-pointer self-end flex items-center bg-blue-gray-100 space-x-1 rounded border"
+										>
 											<span className="leading-none">Redeploy</span>
 											<IoRefresh className="h-5 w-5 text-cool-gray-900" />
 										</div>

@@ -8,7 +8,9 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <Provider session={pageProps.session}>
         <Component {...pageProps} />
-        <Toaster />
+        <Toaster toastOptions={{
+          position: "bottom-right",
+        }} />
     </Provider>
   )
 }
