@@ -3,19 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "prisma": "cross-env NODE_ENV=${NODE_ENV:-development} dotenv-flow -- prisma",
+    "ts-node": "ts-node --compiler-options {\\\"module\\\":\\\"commonjs\\\"}",
+    "lint": "next lint",
+    "studio": "yarn prisma studio"
   },
   "dependencies": {
+    "@heroicons/react": "^1.0.3",
+    "@prisma/client": "^2.28.0",
+    "full-palette": "^1.2.0",
     "next": "11.0.1",
+    "next-auth": "^3.27.3",
+    "next-plugin-svgr": "^1.0.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-hot-toast": "^2.1.0",
+    "react-icons": "^4.2.0",
+    "tw-utils": "^1.5.1"
   },
   "devDependencies": {
     "@types/react": "17.0.15",
     "autoprefixer": "^10.3.1",
+    "cross-env": "^7.0.3",
+    "dotenv-flow-cli": "^1.0.0",
     "eslint": "7.32.0",
     "eslint-config-next": "11.0.1",
     "postcss": "^8.3.6",
