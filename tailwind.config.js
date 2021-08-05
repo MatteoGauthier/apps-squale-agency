@@ -9,6 +9,6 @@ module.exports = {
 	variants: {
 		extend: {},
 	},
-	plugins: [],
-	presets: [require("full-palette"), require('tw-utils/font/inter')],
-};
+	plugins: [require('@tailwindcss/forms'),],
+	presets: [require("full-palette"), require("tw-utils/font/inter")],
+}

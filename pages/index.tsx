@@ -13,6 +13,7 @@ import { App, Prisma } from "@prisma/client"
 import { toast } from "react-hot-toast"
 import copy from "copy-text-to-clipboard"
 import Tippy from "@tippyjs/react"
+import { useSession } from "next-auth/client"
 
 type AppWithHostAndRepository = Prisma.AppGetPayload<{
 	include: { host: true; repository: true }
@@ -23,8 +24,9 @@ type Props = {
 }
 
 const Home: React.FC<Props> = (props) => {
-	console.log("props", props.apps)
+	// console.log("props", props.apps)
 	const [isLoading, setIsLoading] = useState(false)
+	const [session, loading] = useSession()
 
 	const sendDeployHook = async (url: string) => {
 		if (!isLoading) {
@@ -58,7 +60,7 @@ const Home: React.FC<Props> = (props) => {
 			</div>
 			<div className="absolute inset-0 z-10 px-4 mx-auto max-w-screen-2xl">
 				<h1 className="flex items-center mt-8 mb-5 space-x-3 text-4xl font-bold tracking-tight text-cool-gray-800">
-					<span className="leading-none">apps.squale.agency</span>
+					<span className="leading-none">apps.squale.agency {JSON.stringify(session)}</span>
 					<div className="h-4 w-4 rounded-full mt-1 bg-[#0065bb]"></div>
 				</h1>
 				<div className="grid 2xl:grid-cols-5 grid-cols-3 gap-y-3 gap-x-2">
